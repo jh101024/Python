@@ -1,0 +1,40 @@
+# -*- coding:utf-8 -*-
+import os
+import re
+class Callgraph():
+    def __init__(self,path):
+        self.path=path
+    def chose_files(self):
+        path=self.path
+        files=os.listdir(path)
+        for file in files:
+            if not file.endswith("cgraph.dot"):
+                os.remove(os.path.join(path,file))
+            if file.endswith("icgraph.dot"):
+                os.remove(os.path.join(path,file))
+                files.remove(file)
+        return files
+    def chose_text(self):
+        files=self.chose_files()
+        path=self.path
+        for file in files:
+            f1=open(os.path.join(path,file))
+            text=f1.readlines()
+            path_w="C:\\jh"
+            f2=open(os.path.join(path_w,file),"w")
+            pat1=re.compile(r"(Node.*)\[")
+            pat2=re.compile(r"label=(.*),height")
+            for t in text:
+                if pat1.search(t) or pat2.search(t):
+                    text1=pat1.findall(t)
+                    text2=pat2.findall(t)
+                    f2.writelines(text1)
+                    f2.write("\n")
+                    f2.writelines(text2)
+                    f2.write("\n")
+def main():
+    c=Callgraph(r"C:\\cx")
+    c.chose_files()
+    c.chose_text()
+if __name__ == '__main__':
+    main()
